@@ -14,8 +14,8 @@ res = require('resources')
 
 defaults = {
 
-	--buffs = S{"paralysis","STR Down","curse","max hp down"}
-	buffs = S{4,144,136,20}
+	buffs = S{"paralysis","STR Down","curse","max hp down","plague"}
+	--buffs = S{4,144,136,20}
 }
 
 settings = config.load(defaults)
@@ -179,9 +179,9 @@ windower.register_event('gain buff', function(id)
 	
     for key,val in pairs(settings.buffs) do
 
-        if val == id then
+		if key:lower() == name:lower() then
 			-- Paralyzed
-            if id == 4 and active then
+            if name:lower() == 'paralysis' and active then
 				windower.add_to_chat(123,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 
 				while haveBuff("paralysis") do
@@ -194,7 +194,7 @@ windower.register_event('gain buff', function(id)
 					coroutine.sleep(3.8)
 				end
 			-- MAX HP DOWN
-			elseif id == 144 and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
+			elseif name:lower() == 'max hp down' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(123,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 
 				while haveBuff("max hp down") do
@@ -207,7 +207,7 @@ windower.register_event('gain buff', function(id)
 					coroutine.sleep(3.8)
 				end				
 			-- STAT DOWN
-			elseif id == 136 and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
+			elseif name:lower() == 'str down' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(123,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 
 				while haveBuff("str down") do
@@ -219,8 +219,21 @@ windower.register_event('gain buff', function(id)
 					end
 					coroutine.sleep(3.8)
 				end
+			-- Plague
+			elseif name:lower() == 'plague' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
+				windower.add_to_chat(123,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
+
+				while haveBuff("plague") do
+					if haveMeds('panacea') then
+						windower.add_to_chat(6,"[AutoItem] Using Panacea.")
+						windower.send_command('input /item "Panacea" '..windower.ffxi.get_player()["name"])
+					else
+						windower.add_to_chat(123,"[AutoItem] No Panacea!")
+					end
+					coroutine.sleep(3.8)
+				end
 			-- ST20 Curse
-			elseif id == 20 and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
+			elseif name:lower() == 'curse' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) and id == 20 then
 				windower.add_to_chat(123,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 				
 				while haveBuff("curse") do
