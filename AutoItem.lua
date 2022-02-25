@@ -49,7 +49,7 @@ windower.register_event('gain buff', function(id)
 						windower.add_to_chat(6,"[AutoItem] Using Remedy.")
 						windower.send_command('input /item "Remedy" '..windower.ffxi.get_player()["name"])
 					end
-					coroutine.sleep(3.8)
+					coroutine.sleep(4.1)
 				end
 			-- MAX HP DOWN
 			elseif name:lower() == 'max hp down' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
@@ -60,8 +60,19 @@ windower.register_event('gain buff', function(id)
 						windower.add_to_chat(6,"[AutoItem] Using Panacea.")
 						windower.send_command('input /item "Panacea" '..windower.ffxi.get_player()["name"])
 					end
-					coroutine.sleep(3.8)
-				end				
+					coroutine.sleep(4.1)
+				end
+			-- Accuracy Down [Ongo specific]
+			elseif name:lower() == 'accuracy down' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
+				windower.add_to_chat(6,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
+
+				while haveBuff("accuracy down") do
+					if haveMeds('panacea') then
+						windower.add_to_chat(6,"[AutoItem] Using Panacea.")
+						windower.send_command('input /item "Panacea" '..windower.ffxi.get_player()["name"])
+					end
+					coroutine.sleep(4.1)
+				end
 			-- STAT DOWN
 			elseif name:lower() == 'str down' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(6,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
@@ -71,7 +82,7 @@ windower.register_event('gain buff', function(id)
 						windower.add_to_chat(6,"[AutoItem] Using Panacea.")
 						windower.send_command('input /item "Panacea" '..windower.ffxi.get_player()["name"])
 					end
-					coroutine.sleep(3.8)
+					coroutine.sleep(4.1)
 				end
 			-- Plague
 			elseif name:lower() == 'plague' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
@@ -82,7 +93,7 @@ windower.register_event('gain buff', function(id)
 						windower.add_to_chat(6,"[AutoItem] Using Remedy.")
 						windower.send_command('input /item "Remedy" '..windower.ffxi.get_player()["name"])
 					end
-					coroutine.sleep(3.8)
+					coroutine.sleep(4.1)
 				end
 			-- ST20 Curse
 			elseif name:lower() == 'curse' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) and id == 20 then
@@ -102,7 +113,7 @@ windower.register_event('gain buff', function(id)
 						windower.add_to_chat(6,"[AutoItem] Using Panacea.")
 						windower.send_command('input /item "Panacea" '..windower.ffxi.get_player()["name"])
 					end
-					coroutine.sleep(3.8)
+					coroutine.sleep(4.1)
 				end
 			end
 		end
