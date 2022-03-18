@@ -41,7 +41,7 @@ windower.register_event('gain buff', function(id)
     for key,val in pairs(settings.buffs) do
 		if key:lower() == name:lower() then
 			-- Remedy debuffs
-            if name:lower() == 'paralysis' and active then
+            if name:lower() == 'paralysis' and active == true then
 				windower.add_to_chat(6,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 
 				while haveBuff(name:lower()) do
@@ -52,7 +52,7 @@ windower.register_event('gain buff', function(id)
 					coroutine.sleep(4.1)
 				end
 			-- MAX HP DOWN
-			elseif name:lower() == 'max hp down' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
+			elseif name:lower() == 'max hp down' and active == true and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(6,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 
 				while haveBuff("max hp down") do
@@ -63,7 +63,7 @@ windower.register_event('gain buff', function(id)
 					coroutine.sleep(4.1)
 				end
 			-- Accuracy Down [Ongo specific]
-			elseif name:lower() == 'accuracy down' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
+			elseif name:lower() == 'accuracy down' and active == true and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(6,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 
 				while haveBuff("accuracy down") do
@@ -74,7 +74,7 @@ windower.register_event('gain buff', function(id)
 					coroutine.sleep(4.1)
 				end
 			-- STAT DOWN
-			elseif name:lower() == 'str down' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
+			elseif name:lower() == 'str down' and active == true and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(6,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 
 				while haveBuff("str down") do
@@ -85,7 +85,7 @@ windower.register_event('gain buff', function(id)
 					coroutine.sleep(4.1)
 				end
 			-- Plague
-			elseif name:lower() == 'plague' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
+			elseif name:lower() == 'plague' and active == true and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(6,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 
 				while haveBuff("plague") do
@@ -96,7 +96,7 @@ windower.register_event('gain buff', function(id)
 					coroutine.sleep(4.1)
 				end
 			-- ST20 Curse
-			elseif name:lower() == 'curse' and active and SJRestrict == true and gaol_zones:contains(zone_info.zone) and id == 20 then
+			elseif name:lower() == 'curse' and active == true and SJRestrict == true and gaol_zones:contains(zone_info.zone) and id == 20 then
 				windower.add_to_chat(6,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 				
 				while haveBuff("curse") do
@@ -105,7 +105,7 @@ windower.register_event('gain buff', function(id)
 					coroutine.sleep(1.3)
 				end	
 			-- Defense Down
-			elseif name:lower() == 'defense down' and active and defensedown and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
+			elseif name:lower() == 'defense down' and active == true and defensedown and SJRestrict == true and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(6,'[AutoItem] Gained buff: ' .. name:lower() .. '- ' .. key)
 
 				while haveBuff("defense down") do
