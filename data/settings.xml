@@ -2,6 +2,6 @@
 <settings>
     <global>
         <panacea_buffs>shock,rasp,choke,frost,burn,drown,str down,max hp down,defense down</panacea_buffs>
-        <remedy_buffs>paralysis,plague</remedy_buffs>
+        <remedy_buffs>paralysis</remedy_buffs>
     </global>
 </settings>

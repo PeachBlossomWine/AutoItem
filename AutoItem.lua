@@ -8,6 +8,7 @@ require('tables')
 require('strings')
 require('logger')
 require('sets')
+require 'lists'
 packets = require('packets')
 config = require('config')
 chat = require('chat')
@@ -40,14 +41,14 @@ windower.register_event('gain buff', function(id)
 		if val:lower() == name:lower() then
             if settings.remedy_buffs:contains(name:lower()) and active then
 				windower.add_to_chat(6,'[AutoItem] Gained remedy buff: ' .. name:lower() .. ' - ' .. id)
-
-				while haveBuff(name:lower()) and active do
-					if haveMeds('remedy') then
-						windower.add_to_chat(6,"[AutoItem] Using Remedy.")
-						windower.send_command('input /item "Remedy" <me>')
-					end
-					coroutine.sleep(4.1)
-				end
+                
+                if haveMeds('remedy') then
+                    while haveBuff(name:lower()) and active do
+                        windower.add_to_chat(6,"[AutoItem] Using Remedy.")
+                        windower.send_command('input /item "Remedy" <me>')
+                        coroutine.sleep(4.1)
+                    end
+                end
             elseif settings.panacea_buffs:contains(name:lower()) and active and SJRestrict and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(6,'[AutoItem] Gained panacea buff: ' .. name:lower() .. ' - ' .. id)
                 if defensedown and name:lower() == 'defense down' then
@@ -67,13 +68,24 @@ windower.register_event('gain buff', function(id)
                         coroutine.sleep(4.1)
                     end
                 end
-            elseif name:lower() == 'curse' and active and SJRestrict and gaol_zones:contains(zone_info.zone) and id == 20 then
-                windower.add_to_chat(6,'[AutoItem] Gained sacrifice buff: ' .. name:lower() .. ' - ' .. id)
-                while haveBuff("curse") and active do
-                    windower.add_to_chat(6,"[AutoItem] Sending WHM to Sacrifice: " .. find_job_charname('WHM'))
-                    windower.send_command('send '..find_job_charname('WHM')..' sacrifice '..windower.ffxi.get_player()["name"])
-                    coroutine.sleep(1.3)
-                end	
+            elseif name:lower() == 'curse' and active then
+                if SJRestrict and gaol_zones:contains(zone_info.zone) and id == 20 then
+                    windower.add_to_chat(6,'[AutoItem] Gained sacrifice buff: ' .. name:lower() .. ' - ' .. id)
+                    while haveBuff("curse") and active do
+                        windower.add_to_chat(6,"[AutoItem] Sending WHM to Sacrifice: " .. find_job_charname('WHM'))
+                        windower.send_command('send '..find_job_charname('WHM')..' sacrifice '..windower.ffxi.get_player()["name"])
+                        coroutine.sleep(1.3)
+                    end	
+                elseif id == 9 then
+                    windower.add_to_chat(6,'[AutoItem] Gained debuff: ' .. name:lower() .. ' - ' .. id)
+                    if haveMeds('holywater') then
+                        while haveBuff("curse") and active do
+                            windower.add_to_chat(6,"[AutoItem] Using Holy Water:")
+                            windower.send_command('input /item "Holy Water" <me>')
+                            coroutine.sleep(4.1)
+                        end	
+                    end
+                end
             end
         end
     end
@@ -84,15 +96,19 @@ function haveMeds(medication)
 		check_item_id = 4155
 	elseif medication:lower() == 'panacea' then
 		check_item_id = 4149
+    elseif medication:lower() == 'holywater' then
+        check_item_id = 4154
 	end
 	
 	local items = windower.ffxi.get_items()
+       
 	for index, item in pairs(items.inventory) do
 		if type(item) == 'table' and item.id == check_item_id then
+            windower.add_to_chat(6, '[AutoItem] -' .. medication .. '- Found!')
 			return true
 		end
 	end
-	windower.add_to_chat(6, '[AutoItem] <<NO>> -' .. medication .. '- Found!')
+	windower.add_to_chat(3, '[AutoItem] <<NO>> -' .. medication .. '- Found!')
 	return false
 end
 
@@ -128,6 +144,8 @@ windower.register_event('addon command', function(...)
 				defensedown = true
 				windower.add_to_chat(262,"[AutoItem] Defense Down Activated!")
 			end
+        elseif comm == 'test' then
+        haveMeds('holywater')
         end
     end
 end)
