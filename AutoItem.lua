@@ -41,7 +41,7 @@ windower.register_event('gain buff', function(id)
 		if val:lower() == name:lower() then
             if settings.remedy_buffs:contains(name:lower()) and active then
 				windower.add_to_chat(6,'[AutoItem] Gained remedy buff: ' .. name:lower() .. ' - ' .. id)
-                if haveMeds('remedy') then
+                if haveMeds('Remedy') then
                     while haveBuff(name:lower()) and active do
                         windower.add_to_chat(6,"[AutoItem] Using Remedy.")
                         windower.send_command('input /item "Remedy" <me>')
@@ -50,7 +50,7 @@ windower.register_event('gain buff', function(id)
                 end
             elseif settings.panacea_buffs:contains(name:lower()) and active and SJRestrict and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(6,'[AutoItem] Gained panacea buff: ' .. name:lower() .. ' - ' .. id)
-                if haveMeds('panacea') then
+                if haveMeds('Panacea') then
                     if defensedown and name:lower() == 'defense down' then
                         while haveBuff(name:lower()) and active do
                             windower.add_to_chat(6,"[AutoItem] Using Panacea. - DEFENSE DOWN -")
@@ -75,7 +75,7 @@ windower.register_event('gain buff', function(id)
                     end	
                 elseif id == 9 then
                     windower.add_to_chat(6,'[AutoItem] Gained debuff: ' .. name:lower() .. ' - ' .. id)
-                    if haveMeds('holy water') then
+                    if haveMeds('Holy Water') then
                         while haveBuff("curse") and active do
                             windower.add_to_chat(6,"[AutoItem] Using Holy Water:")
                             windower.send_command('input /item "Holy Water" <me>')
@@ -89,17 +89,8 @@ windower.register_event('gain buff', function(id)
 end)
 
 function haveMeds(medication)
-
-    local check_item_table = res.items:with('en',medication:ucfirst())
+    local check_item_table = res.items:with('en',medication)
     local check_item_id = check_item_table and check_item_table.id
-	-- if medication:lower() == 'remedy' then
-		-- check_item_id = 4155
-	-- elseif medication:lower() == 'panacea' then
-		-- check_item_id = 4149
-    -- elseif medication:lower() == 'holywater' then
-        -- check_item_id = 4154
-	-- end
-    
     local items = windower.ffxi.get_items()
     local bags_to_check = L{'inventory','sack','case','satchel'}
     for bag_name in bags_to_check:it() do
