@@ -41,7 +41,6 @@ windower.register_event('gain buff', function(id)
 		if val:lower() == name:lower() then
             if settings.remedy_buffs:contains(name:lower()) and active then
 				windower.add_to_chat(6,'[AutoItem] Gained remedy buff: ' .. name:lower() .. ' - ' .. id)
-                
                 if haveMeds('remedy') then
                     while haveBuff(name:lower()) and active do
                         windower.add_to_chat(6,"[AutoItem] Using Remedy.")
@@ -51,21 +50,19 @@ windower.register_event('gain buff', function(id)
                 end
             elseif settings.panacea_buffs:contains(name:lower()) and active and SJRestrict and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(6,'[AutoItem] Gained panacea buff: ' .. name:lower() .. ' - ' .. id)
-                if defensedown and name:lower() == 'defense down' then
-                    while haveBuff(name:lower()) and active do
-                        if haveMeds('panacea') then
+                if haveMeds('panacea') then
+                    if defensedown and name:lower() == 'defense down' then
+                        while haveBuff(name:lower()) and active do
                             windower.add_to_chat(6,"[AutoItem] Using Panacea. - DEFENSE DOWN -")
                             windower.send_command('input /item "Panacea" <me>')
+                            coroutine.sleep(4.1)
                         end
-                        coroutine.sleep(4.1)
-                    end
-                elseif name:lower() ~= 'defense down' then
-                    while haveBuff(name:lower()) and active do
-                        if haveMeds('panacea') then
+                    elseif name:lower() ~= 'defense down' then
+                        while haveBuff(name:lower()) and active do
                             windower.add_to_chat(6,"[AutoItem] Using Panacea.")
                             windower.send_command('input /item "Panacea" <me>')
+                            coroutine.sleep(4.1)
                         end
-                        coroutine.sleep(4.1)
                     end
                 end
             elseif name:lower() == 'curse' and active then
@@ -78,7 +75,7 @@ windower.register_event('gain buff', function(id)
                     end	
                 elseif id == 9 then
                     windower.add_to_chat(6,'[AutoItem] Gained debuff: ' .. name:lower() .. ' - ' .. id)
-                    if haveMeds('holywater') then
+                    if haveMeds('holy water') then
                         while haveBuff("curse") and active do
                             windower.add_to_chat(6,"[AutoItem] Using Holy Water:")
                             windower.send_command('input /item "Holy Water" <me>')
@@ -92,22 +89,28 @@ windower.register_event('gain buff', function(id)
 end)
 
 function haveMeds(medication)
-	if medication:lower() == 'remedy' then
-		check_item_id = 4155
-	elseif medication:lower() == 'panacea' then
-		check_item_id = 4149
-    elseif medication:lower() == 'holywater' then
-        check_item_id = 4154
-	end
+
+    local check_item_table = res.items:with('en',medication:ucfirst())
+    local check_item_id = check_item_table and check_item_table.id
+	-- if medication:lower() == 'remedy' then
+		-- check_item_id = 4155
+	-- elseif medication:lower() == 'panacea' then
+		-- check_item_id = 4149
+    -- elseif medication:lower() == 'holywater' then
+        -- check_item_id = 4154
+	-- end
+    
+    local items = windower.ffxi.get_items()
+    local bags_to_check = L{'inventory','sack','case','satchel'}
+    for bag_name in bags_to_check:it() do
+        for index, item in pairs(items[bag_name]) do
+            if type(item) == 'table' and item.id == check_item_id then
+                windower.add_to_chat(262,"[AutoItem] F O U N D -> "..medication)
+                return true
+            end
+        end
+    end
 	
-	local items = windower.ffxi.get_items()
-       
-	for index, item in pairs(items.inventory) do
-		if type(item) == 'table' and item.id == check_item_id then
-            windower.add_to_chat(6, '[AutoItem] -' .. medication .. '- Found!')
-			return true
-		end
-	end
 	windower.add_to_chat(3, '[AutoItem] <<NO>> -' .. medication .. '- Found!')
 	return false
 end
@@ -144,8 +147,14 @@ windower.register_event('addon command', function(...)
 				defensedown = true
 				windower.add_to_chat(262,"[AutoItem] Defense Down Activated!")
 			end
-        elseif comm == 'test' then
-        haveMeds('holywater')
+        elseif comm == 'check' then
+            table.remove(args, 1)
+            for k,v in pairs(args) do
+                args[k] = v:lower():ucfirst()
+            end
+            local arg_string = table.concat(args,' ')
+            windower.add_to_chat(262,"[AutoItem] Checking: "..arg_string)
+            haveMeds(arg_string)
         end
     end
 end)
