@@ -51,9 +51,9 @@ windower.register_event('gain buff', function(id)
             elseif settings.panacea_buffs:contains(name:lower()) and active and SJRestrict and gaol_zones:contains(zone_info.zone) then
 				windower.add_to_chat(6,'[AutoItem] Gained panacea buff: ' .. name:lower() .. ' - ' .. id)
                 if haveMeds('Panacea') then
-                    if defensedown and name:lower() == 'defense down' then
+                    if defensedown == true and name:lower() == 'defense down' or name:lower() == 'magic def. down' then
                         while haveBuff(name:lower()) and active do
-                            windower.add_to_chat(6,"[AutoItem] Using Panacea. - DEFENSE DOWN -")
+                            windower.add_to_chat(6,"[AutoItem] Using Panacea. - DEFENSE/MAGIC DEFENSE DOWN -")
                             windower.send_command('input /item "Panacea" <me>')
                             coroutine.sleep(4.1)
                         end
@@ -146,6 +146,15 @@ windower.register_event('addon command', function(...)
             local arg_string = table.concat(args,' ')
             windower.add_to_chat(262,"[AutoItem] Checking: "..arg_string)
             haveMeds(arg_string)
+        elseif comm == 'test' then
+        local buffs = windower.ffxi.get_player()
+        for _,bid in pairs(buffs.buffs) do
+			--local buff = res.buffs[bid]
+			if bid == 259 then
+                table.vprint(buffs)
+			end
+		end
+        
         end
     end
 end)
