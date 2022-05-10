@@ -77,7 +77,7 @@ windower.register_event('gain buff', function(id)
                     windower.add_to_chat(6,'[AutoItem] Gained debuff: ' .. name:lower() .. ' - ' .. id)
                     if haveMeds('Holy Water') then
                         while haveBuff("curse") and active do
-                            windower.add_to_chat(6,"[AutoItem] Using Holy Water:")
+                            windower.add_to_chat(6,"[AutoItem] Using Holy Water.")
                             windower.send_command('input /item "Holy Water" <me>')
                             coroutine.sleep(4.1)
                         end	
