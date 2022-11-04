@@ -35,17 +35,18 @@ table.insert(allbuffs,"curse")
 windower.register_event('gain buff', function(id)
 	zone_info = windower.ffxi.get_info()
 	local name = res.buffs[id].english
+	local player = windower.ffxi.get_player()
 
 	-- Remedy debuffs
     for key,val in pairs(allbuffs) do
 		if val:lower() == name:lower() then
-            if settings.remedy_buffs:contains(name:lower()) and active then
+            if settings.remedy_buffs:contains(name:lower()) and active and player.main_job ~= 'WHM' then
 				windower.add_to_chat(6,'[AutoItem] Gained remedy buff: ' .. name:lower() .. ' - ' .. id)
                 if haveMeds('Remedy') then
                     while haveBuff(name:lower()) and active do
                         windower.add_to_chat(6,"[AutoItem] Using Remedy.")
                         windower.send_command('input /item "Remedy" <me>')
-                        coroutine.sleep(4.1)
+                        coroutine.sleep(5.1)
                     end
                 end
             elseif settings.panacea_buffs:contains(name:lower()) and active and SJRestrict and gaol_zones:contains(zone_info.zone) then
@@ -55,17 +56,17 @@ windower.register_event('gain buff', function(id)
                         while haveBuff(name:lower()) and active do
                             windower.add_to_chat(6,"[AutoItem] Using Panacea. - DEFENSE/MAGIC DEFENSE DOWN -")
                             windower.send_command('input /item "Panacea" <me>')
-                            coroutine.sleep(4.1)
+                            coroutine.sleep(5.1)
                         end
                     elseif name:lower() ~= 'defense down' then
                         while haveBuff(name:lower()) and active do
                             windower.add_to_chat(6,"[AutoItem] Using Panacea.")
                             windower.send_command('input /item "Panacea" <me>')
-                            coroutine.sleep(4.1)
+                            coroutine.sleep(5.1)
                         end
                     end
                 end
-            elseif name:lower() == 'curse' and active then
+            elseif name:lower() == 'curse' and active and player.main_job ~= 'WHM' then
                 if SJRestrict and gaol_zones:contains(zone_info.zone) and id == 20 then
                     windower.add_to_chat(6,'[AutoItem] Gained sacrifice buff: ' .. name:lower() .. ' - ' .. id)
                     while haveBuff("curse") and active do
@@ -79,7 +80,7 @@ windower.register_event('gain buff', function(id)
                         while haveBuff("curse") and active do
                             windower.add_to_chat(6,"[AutoItem] Using Holy Water.")
                             windower.send_command('input /item "Holy Water" <me>')
-                            coroutine.sleep(4.1)
+                            coroutine.sleep(5.1)
                         end	
                     end
                 end
