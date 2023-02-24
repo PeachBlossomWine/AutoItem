@@ -132,12 +132,22 @@ windower.register_event('addon command', function(...)
 			active = false
             windower.add_to_chat(262,"[AutoItem] OFF")
 		elseif comm == 'dd' then
-			if defensedown then
-				defensedown = false
-				windower.add_to_chat(262,"[AutoItem] Defense Down INACTIVE!")
+			if not args[2] then
+				if defensedown then
+					defensedown = false
+					windower.add_to_chat(262,"[AutoItem] Defense Down INACTIVE!")
+				else
+					defensedown = true
+					windower.add_to_chat(262,"[AutoItem] Defense Down Activated!")
+				end
 			else
-				defensedown = true
-				windower.add_to_chat(262,"[AutoItem] Defense Down Activated!")
+				if args[2]:lower() == 'on' then
+					defensedown = true
+					windower.add_to_chat(262,"[AutoItem] Defense Down Activated!")
+				elseif args[2]:lower() == 'off' then
+					defensedown = false
+					windower.add_to_chat(262,"[AutoItem] Defense Down INACTIVE!")
+				end
 			end
         elseif comm == 'check' then
             table.remove(args, 1)
