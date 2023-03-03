@@ -1,7 +1,0 @@
-<?xml version="1.1" ?>
-<settings>
-    <global>
-        <panacea_buffs>shock,rasp,choke,frost,burn,drown,str down,max hp down,defense down,slow</panacea_buffs>
-        <remedy_buffs>paralysis</remedy_buffs>
-    </global>
-</settings>
