@@ -170,7 +170,6 @@ function handle_incoming_chunk(id, data)
 		end
 	elseif id == 0x063 then -- Player buffs for Aura detection : Credit: elii, bp4
 		local parsed = packets.parse('incoming', data)
-		--active_buffs = S{}
 		for i=1, 32 do
 			local buff = tonumber(parsed[string.format('Buffs %s', i)]) or 0
 			local time = tonumber(parsed[string.format('Time %s', i)]) or 0
