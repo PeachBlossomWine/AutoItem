@@ -13,6 +13,7 @@ chat = require('chat')
 res = require('resources')
 
 active = true
+panacea = false
 job_registry = T{}
 panacea_buffs = S{136,144,149,167}
 remedy_buffs = S{4}
@@ -44,7 +45,7 @@ function use_meds_check()
 			else
 				attempt = os.time()
 			end
-		elseif panacea_buffs:contains(buff_id) and active and (os.time()-attempt) > 4 then
+		elseif panacea_buffs:contains(buff_id) and active and panacea and (os.time()-attempt) > 4 then
 			if haveMeds(4149) and haveBuff(buff_id) then
 				windower.add_to_chat(6,"[AutoItem] Using Panacea.")
 				windower.send_command('input /item "Panacea" <me>')
@@ -90,46 +91,6 @@ function haveBuff(buff_id)
 	return false
 end
 
--- Credit to partyhints
-function set_registry(id, job_id)
-    if not id then return false end
-    job_registry[id] = job_registry[id] or 'NON'
-    job_id = job_id or 0
-    if res.jobs[job_id].ens == 'NON' and job_registry[id] and not S{'NON', 'UNK'}:contains(job_registry[id]) then 
-        return false
-    end
-    job_registry[id] = res.jobs[job_id].ens
-    return true
-end
-
--- Credit to partyhints
-function get_registry(id)
-    if job_registry[id] then
-        return job_registry[id]
-    else
-        return 'UNK'
-    end
-end
-
--- Find which char has which job
-function find_job_charname(job)
-
-	local player = windower.ffxi.get_player()
-	for k, v in pairs(windower.ffxi.get_party()) do
-		if type(v) == 'table' then
-			if v.name ~= player.name then
-				ptymember = windower.ffxi.get_mob_by_name(v.name)
-				if v.mob ~= nil and ptymember.valid_target then
-                    if get_registry(ptymember.id) == job then
-                        return v.name
-					end
-				end
-			end
-		end
-	end
-	return 'NoJobFound'
-end
-
 local last_render = 0
 local delay = 0.5
 windower.register_event('prerender', function()
@@ -157,24 +118,13 @@ function handle_incoming_chunk(id, data)
 		elseif action_message["Category"] == 8 then
 			isCasting = true
 		end
-	elseif (id == 0x0DD or id == 0x0DF or id == 0x0C8) then	--Party member update
-        local parsed = packets.parse('incoming', data)
-		if parsed then
-			local playerId = parsed['ID']
-			local indexx = parsed['Index']
-			local job = parsed['Main job']
-			
-			if playerId and playerId > 0 then
-				set_registry(parsed['ID'], parsed['Main job'])
-			end
-		end
 	elseif id == 0x063 then -- Player buffs for Aura detection : Credit: elii, bp4
 		local parsed = packets.parse('incoming', data)
 		for i=1, 32 do
 			local buff = tonumber(parsed[string.format('Buffs %s', i)]) or 0
 			local time = tonumber(parsed[string.format('Time %s', i)]) or 0
 			
-			if buff > 0 and buff ~= 255 and (panacea_buffs:contains(buff) or remedy_buffs:contains(buff)) then
+			if buff > 0 and buff ~= 255 and allbuffs:contains(buff) then
 				if math.ceil(1009810800 + (time / 60) + 0x100000000 / 60 * 9) - os.time() > 5 then
 					if not (active_buffs:contains(buff)) then
 						windower.add_to_chat(1, string.format("%s", ("[AutoItem] Debuff detected: %s - [%s]"):format(res.buffs[buff].en, buff):color(39)))
@@ -196,6 +146,16 @@ function handle_addon(...)
         elseif comm == 'off' then
 			active = false
             windower.add_to_chat(262,"[AutoItem] OFF")
+		elseif comm == 'pana' then
+			if args[2] and args[2]:lower() == 'on' then
+				panacea = true
+				windower.add_to_chat(262,"[AutoItem] Panacea ON")
+			elseif args[2] and args[2]:lower() == 'off' then
+				panacea = false
+				windower.add_to_chat(262,"[AutoItem] Panacea OFF")
+			else
+				windower.add_to_chat(262,"[AutoItem] No parameter specified.")
+			end
 		elseif comm == 'show' then
 			for k,v in pairs(active_buffs) do
 				windower.add_to_chat(13,'Active Buffs: '..k)
