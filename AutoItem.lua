@@ -170,13 +170,13 @@ function handle_incoming_chunk(id, data)
 		end
 	elseif id == 0x063 then -- Player buffs for Aura detection : Credit: elii, bp4
 		local parsed = packets.parse('incoming', data)
-		active_buffs = S{}
+		--active_buffs = S{}
 		for i=1, 32 do
 			local buff = tonumber(parsed[string.format('Buffs %s', i)]) or 0
 			local time = tonumber(parsed[string.format('Time %s', i)]) or 0
 			
 			if buff > 0 and buff ~= 255 and (panacea_buffs:contains(buff) or remedy_buffs:contains(buff)) then
-				if math.ceil(1009810800 + (time / 60) + 0x100000000 / 60 * 9) - os.time() ~= 5 then
+				if math.ceil(1009810800 + (time / 60) + 0x100000000 / 60 * 9) - os.time() > 5 then
 					if not (active_buffs:contains(buff)) then
 						windower.add_to_chat(1, string.format("%s", ("[AutoItem] Debuff detected: %s - [%s]"):format(res.buffs[buff].en, buff):color(39)))
 						active_buffs:add(buff)
