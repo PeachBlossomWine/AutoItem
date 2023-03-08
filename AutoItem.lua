@@ -7,7 +7,7 @@ require('tables')
 require('strings')
 require('logger')
 require('sets')
-require 'lists'
+require('lists')
 packets = require('packets')
 chat = require('chat')
 res = require('resources')
