@@ -15,7 +15,7 @@ res = require('resources')
 active = true
 panacea = false
 job_registry = T{}
-panacea_buffs = S{136,144,149,167}
+panacea_buffs = S{13,136,144,146,149,167}
 remedy_buffs = S{4}
 holywater_buffs = S{9}
 allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs)
@@ -39,27 +39,30 @@ function use_meds_check()
 	-- Remedy debuffs
     for buff_id,_ in pairs (active_buffs) do
 		if remedy_buffs:contains(buff_id) and active and player.main_job ~= 'WHM' and (os.time()-attempt) > 4 then
-			if haveMeds(4155) and haveBuff(buff_id) then
+			if haveBuff(buff_id) and haveMeds(4155) then
 				windower.add_to_chat(6,"[AutoItem] Using Remedy.")
 				windower.send_command('input /item "Remedy" <me>')
 				attempt = os.time()
 			else
+				active_buffs:remove(buff_id)
 				attempt = os.time()
 			end
 		elseif panacea_buffs:contains(buff_id) and active and panacea and (os.time()-attempt) > 4 then
-			if haveMeds(4149) and haveBuff(buff_id) then
+			if haveBuff(buff_id) and haveMeds(4149) then
 				windower.add_to_chat(6,"[AutoItem] Using Panacea.")
 				windower.send_command('input /item "Panacea" <me>')
 				attempt = os.time()
 			else
+				active_buffs:remove(buff_id)
 				attempt = os.time()
 			end
 		elseif holywater_buffs:contains(buff_id) and active and player.main_job ~= 'WHM' and (os.time()-attempt) > 4 then
-            if haveMeds(4154) and haveBuff(buff_id) then
+            if haveBuff(buff_id) and haveMeds(4154) then
 				windower.add_to_chat(6,"[AutoItem] Using Holy Water.")
 				windower.send_command('input /item "Holy Water" <me>')
 				attempt = os.time()
             else
+				active_buffs:remove(buff_id)
 				attempt = os.time()
 			end
 		end
