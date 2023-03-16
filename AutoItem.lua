@@ -16,9 +16,10 @@ active = true
 panacea = false
 job_registry = T{}
 panacea_buffs = S{13,136,144,145,146,149,167}	-- Slow, STR Down, Max HP Down, Max MP Down, Accuracy Down, Defense Down, Magic Def. Down
+dot_buffs = S{128,129,130,131,132,133}
 remedy_buffs = S{4,8}	-- Paralysis, Disease
 holywater_buffs = S{9}	-- Curse
-allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs)
+allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs):union(dot_buffs)
 active_buffs = S{}
 
 local __bags = {}
@@ -47,7 +48,7 @@ function use_meds_check()
 				active_buffs:remove(buff_id)
 				attempt = os.time()
 			end
-		elseif panacea_buffs:contains(buff_id) and active and panacea and (os.time()-attempt) > 4 then
+		elseif (panacea_buffs:contains(buff_id) or dot_buffs:contains(buff_id)) and active and panacea and (os.time()-attempt) > 4 then
 			if haveBuff(buff_id) and haveMeds(4149) then
 				windower.add_to_chat(6,"[AutoItem] Using Panacea.")
 				windower.send_command('input /item "Panacea" <me>')
@@ -108,9 +109,9 @@ windower.register_event('prerender', function()
 end)
 
 function handle_lose_buff(buff_id)
-	if buff_id and (remedy_buffs:contains(buff_id) or panacea_buffs:contains(buff_id)) then
+	if buff_id and allbuffs:contains(buff_id) then
 		active_buffs:remove(buff_id)
-		if panacea and active and panacea_buffs:contains(buff_id) then
+		if panacea and active and (panacea_buffs:contains(buff_id) or dot_buffs:contains(buff_id)) then
 			windower.add_to_chat(13,'[AutoItem] Debuff removed: ' .. res.buffs[buff_id].en .. ' - '..'['..buff_id..']')
 		elseif active and (remedy_buffs:contains(buff_id) or holywater_buffs:contains(buff_id)) then
 			windower.add_to_chat(13,'[AutoItem] Debuff removed: ' .. res.buffs[buff_id].en .. ' - '..'['..buff_id..']')
