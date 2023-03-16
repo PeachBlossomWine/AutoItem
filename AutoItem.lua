@@ -15,9 +15,9 @@ res = require('resources')
 active = true
 panacea = false
 job_registry = T{}
-panacea_buffs = S{13,136,144,146,149,167}
-remedy_buffs = S{4}
-holywater_buffs = S{9}
+panacea_buffs = S{13,136,144,145,146,149,167}	-- Slow, STR Down, Max HP Down, Max MP Down, Accuracy Down, Defense Down, Magic Def. Down
+remedy_buffs = S{4,8}	-- Paralysis, Disease
+holywater_buffs = S{9}	-- Curse
 allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs)
 active_buffs = S{}
 
