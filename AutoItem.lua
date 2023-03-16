@@ -180,6 +180,14 @@ windower.register_event('load', function()
 	windower.add_to_chat(262,'[AutoItem] Welcome to AutoItem!')
 end)
 
+function handle_zone_change(new_id, old_id)
+	if panacea then
+		windower.add_to_chat(262,'[AutoItem] Disabling Auto-Panacea.')
+		panacea = false
+	end
+end
+
 windower.register_event('addon command',handle_addon)
 windower.register_event('lose buff', handle_lose_buff)
 windower.register_event('incoming chunk', handle_incoming_chunk)
+windower.register_event('zone change', handle_zone_change)
