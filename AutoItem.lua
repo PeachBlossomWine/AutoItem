@@ -23,7 +23,7 @@ allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs):union(dot_bu
 active_buffs = S{}
 
 local __bags = {}
- local getBagType = function(access, equippable)
+local getBagType = function(access, equippable)
     return S(res.bags):filter(function(key) return (key.access == access and key.en ~= 'Recycle' and (not key.equippable or key.equippable == equippable)) or key.id == 0 and key end)
 end
 
