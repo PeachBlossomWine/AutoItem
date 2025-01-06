@@ -39,7 +39,7 @@ function use_meds_check()
 
 	-- Remedy debuffs
     for buff_id,_ in pairs (active_buffs) do
-		if remedy_buffs:contains(buff_id) and active and player.main_job ~= 'WHM' and (os.time()-attempt) > 4 then
+		if remedy_buffs:contains(buff_id) and active and (os.time()-attempt) > 4 then -- and player.main_job ~= 'WHM' 
 			if haveBuff(buff_id) and haveMeds(4155) then
 				windower.add_to_chat(6,"[AutoItem] Using Remedy.")
 				windower.send_command('input /item "Remedy" <me>')
