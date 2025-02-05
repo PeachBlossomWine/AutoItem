@@ -14,10 +14,10 @@ res = require('resources')
 
 active = true
 panacea = false
+dot = false
 job_registry = T{}
 panacea_buffs = S{13,136,144,145,146,149,167}	-- Slow, STR Down, Max HP Down, Max MP Down, Accuracy Down, Defense Down, Magic Def. Down
---dot_buffs = S{128,129,130,131,132,133} -- Burn, Frost, Choke, Rasp, Shock, Drown
-dot_buffs = S{5000}
+dot_buffs = S{128,129,130,131,132,133} -- Burn, Frost, Choke, Rasp, Shock, Drown
 remedy_buffs = S{4,8}	-- Paralysis, Disease
 holywater_buffs = S{9}	-- Curse
 allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs):union(dot_buffs)
@@ -40,7 +40,7 @@ function use_meds_check()
 
 	-- Remedy debuffs
     for buff_id,_ in pairs (active_buffs) do
-		if remedy_buffs:contains(buff_id) and active and (os.time()-attempt) > 4 then -- and player.main_job ~= 'WHM' 
+		if active and remedy_buffs:contains(buff_id) and (os.time()-attempt) > 4 then -- and player.main_job ~= 'WHM' 
 			if haveBuff(buff_id) and haveMeds(4155) then
 				windower.add_to_chat(6,"[AutoItem] Using Remedy.")
 				windower.send_command('input /item "Remedy" <me>')
@@ -49,7 +49,7 @@ function use_meds_check()
 				active_buffs:remove(buff_id)
 				attempt = os.time()
 			end
-		elseif (panacea_buffs:contains(buff_id) or dot_buffs:contains(buff_id)) and active and panacea and (os.time()-attempt) > 4 then
+		elseif active and ((panacea and panacea_buffs:contains(buff_id)) or (dot and dot_buffs:contains(buff_id))) and (os.time()-attempt) > 4 then
 			if haveBuff(buff_id) and haveMeds(4149) then
 				windower.add_to_chat(6,"[AutoItem] Using Panacea.")
 				windower.send_command('input /item "Panacea" <me>')
@@ -58,7 +58,7 @@ function use_meds_check()
 				active_buffs:remove(buff_id)
 				attempt = os.time()
 			end
-		elseif holywater_buffs:contains(buff_id) and active and player.main_job ~= 'WHM' and (os.time()-attempt) > 4 then
+		elseif active and holywater_buffs:contains(buff_id) and player.main_job ~= 'WHM' and (os.time()-attempt) > 4 then
             if haveBuff(buff_id) and haveMeds(4154) then
 				windower.add_to_chat(6,"[AutoItem] Using Holy Water.")
 				windower.send_command('input /item "Holy Water" <me>')
@@ -167,6 +167,16 @@ function handle_addon(...)
 			elseif args[2] and args[2]:lower() == 'off' then
 				panacea = false
 				windower.add_to_chat(262,"[AutoItem] Panacea OFF")
+			else
+				windower.add_to_chat(262,"[AutoItem] No parameter specified.")
+			end
+		elseif comm == 'dot' then
+			if args[2] and args[2]:lower() == 'on' then
+				dot = true
+				windower.add_to_chat(262,"[AutoItem] DoT ON")
+			elseif args[2] and args[2]:lower() == 'off' then
+				dot = false
+				windower.add_to_chat(262,"[AutoItem] DoT OFF")
 			else
 				windower.add_to_chat(262,"[AutoItem] No parameter specified.")
 			end
