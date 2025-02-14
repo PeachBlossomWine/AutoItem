@@ -42,50 +42,50 @@ function use_meds_check()
 
 	-- Remedy debuffs
     for buff_id,_ in pairs (active_buffs) do
-		if doom_buffs:contains(buff_id) and player.main_job ~= 'WHM' and (os.time()-attempt) > 1.5 then
+		if doom_buffs:contains(buff_id) and (os.clock()-attempt) > 1.5 and (player.main_job ~= 'WHM' or (player.main_job == 'WHM' and windower.ffxi.get_spell_recasts()[20] > 0)) then
             if haveBuff(buff_id) and haveMeds(4154) then
 				windower.add_to_chat(6,"[AutoItem] DOOMED - Using Holy Water.")
 				windower.send_command('input /item "Holy Water" <me>')
-				attempt = os.time()
+				attempt = os.clock()
             else
 				active_buffs:remove(buff_id)
-				attempt = os.time()
+				attempt = os.clock()
 			end
-		elseif echo_buffs:contains(buff_id) and (os.time()-attempt) > 1.5 then
+		elseif echo_buffs:contains(buff_id) and (os.clock()-attempt) > 1.5 then
             if haveBuff(buff_id) and haveMeds(4151) then
 				windower.add_to_chat(6,"[AutoItem] Silenced - Using Echo Drops.")
 				windower.send_command('input /item "Echo Drops" <me>')
-				attempt = os.time()
+				attempt = os.clock()
             else
 				active_buffs:remove(buff_id)
-				attempt = os.time()
+				attempt = os.clock()
 			end
-		elseif active and remedy_buffs:contains(buff_id) and (os.time()-attempt) > 4 then
+		elseif active and remedy_buffs:contains(buff_id) and (os.clock()-attempt) > 4 then
 			if haveBuff(buff_id) and haveMeds(4155) then
 				windower.add_to_chat(6,"[AutoItem] Using Remedy.")
 				windower.send_command('input /item "Remedy" <me>')
-				attempt = os.time()
+				attempt = os.clock()
 			else
 				active_buffs:remove(buff_id)
-				attempt = os.time()
+				attempt = os.clock()
 			end
-		elseif active and ((panacea and panacea_buffs:contains(buff_id)) or (dot and dot_buffs:contains(buff_id))) and (os.time()-attempt) > 4 then
+		elseif active and ((panacea and panacea_buffs:contains(buff_id)) or (dot and dot_buffs:contains(buff_id))) and (os.clock()-attempt) > 4 then
 			if haveBuff(buff_id) and haveMeds(4149) then
 				windower.add_to_chat(6,"[AutoItem] Using Panacea.")
 				windower.send_command('input /item "Panacea" <me>')
-				attempt = os.time()
+				attempt = os.clock()
 			else
 				active_buffs:remove(buff_id)
-				attempt = os.time()
+				attempt = os.clock()
 			end
-		elseif active and holywater_buffs:contains(buff_id) and player.main_job ~= 'WHM' and (os.time()-attempt) > 4 then
+		elseif active and holywater_buffs:contains(buff_id) and player.main_job ~= 'WHM' and (os.clock()-attempt) > 4 then
             if haveBuff(buff_id) and haveMeds(4154) then
 				windower.add_to_chat(6,"[AutoItem] Using Holy Water.")
 				windower.send_command('input /item "Holy Water" <me>')
-				attempt = os.time()
+				attempt = os.clock()
             else
 				active_buffs:remove(buff_id)
-				attempt = os.time()
+				attempt = os.clock()
 			end
 		end
 	end
