@@ -19,8 +19,9 @@ job_registry = T{}
 panacea_buffs = S{13,136,144,145,146,149,167}	-- Slow, STR Down, Max HP Down, Max MP Down, Accuracy Down, Defense Down, Magic Def. Down
 dot_buffs = S{128,129,130,131,132,133} -- Burn, Frost, Choke, Rasp, Shock, Drown
 remedy_buffs = S{3,4,8}	-- Poison, Paralysis, Disease
-holywater_buffs = S{9,15}	-- Curse
-allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs):union(dot_buffs)
+holywater_buffs = S{9}	-- Curse
+doom_buffs = S{15}
+allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs):union(dot_buffs):union(doom_buffs)
 active_buffs = S{}
 
 local __bags = {}
@@ -40,7 +41,16 @@ function use_meds_check()
 
 	-- Remedy debuffs
     for buff_id,_ in pairs (active_buffs) do
-		if active and remedy_buffs:contains(buff_id) and (os.time()-attempt) > 4 then -- and player.main_job ~= 'WHM' 
+		if doom_buffs:contains(buff_id) and player.main_job ~= 'WHM' and (os.time()-attempt) > 4 then
+            if haveBuff(buff_id) and haveMeds(4154) then
+				windower.add_to_chat(6,"[AutoItem] DOOMED - Using Holy Water.")
+				windower.send_command('input /item "Holy Water" <me>')
+				attempt = os.time()
+            else
+				active_buffs:remove(buff_id)
+				attempt = os.time()
+			end
+		elseif active and remedy_buffs:contains(buff_id) and (os.time()-attempt) > 4 then -- and player.main_job ~= 'WHM' 
 			if haveBuff(buff_id) and haveMeds(4155) then
 				windower.add_to_chat(6,"[AutoItem] Using Remedy.")
 				windower.send_command('input /item "Remedy" <me>')
