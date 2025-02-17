@@ -51,15 +51,6 @@ function use_meds_check()
 				active_buffs:remove(buff_id)
 				attempt = os.clock()
 			end
-		elseif echo_buffs:contains(buff_id) and (os.clock()-attempt) > 1.5 then
-            if haveBuff(buff_id) and haveMeds(4151) then
-				windower.add_to_chat(6,"[AutoItem] Silenced - Using Echo Drops.")
-				windower.send_command('input /item "Echo Drops" <me>')
-				attempt = os.clock()
-            else
-				active_buffs:remove(buff_id)
-				attempt = os.clock()
-			end
 		elseif active and remedy_buffs:contains(buff_id) and (os.clock()-attempt) > 4 then
 			if haveBuff(buff_id) and haveMeds(4155) then
 				windower.add_to_chat(6,"[AutoItem] Using Remedy.")
