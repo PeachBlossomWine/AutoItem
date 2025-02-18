@@ -19,10 +19,9 @@ job_registry = T{}
 panacea_buffs = S{12,13,136,144,145,146,147,149,167}	-- Weight, Slow, STR Down, Max HP Down, Max MP Down, Attack Down, Accuracy Down, Defense Down, Magic Def. Down
 dot_buffs = S{128,129,130,131,132,133} -- Burn, Frost, Choke, Rasp, Shock, Drown
 remedy_buffs = S{3,4,8}	-- Poison, Paralysis, Disease
-echo_buffs = S{6} -- Silence
 holywater_buffs = S{9}	-- Curse
 doom_buffs = S{15}
-allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs):union(dot_buffs):union(doom_buffs):union(echo_buffs)
+allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs):union(dot_buffs):union(doom_buffs)
 active_buffs = S{}
 
 local __bags = {}
@@ -148,9 +147,9 @@ function handle_incoming_chunk(id, data)
 			if buff > 0 and buff ~= 255 and allbuffs:contains(buff) then
 				if buff == 15 or math.ceil(1009810800 + (our_time / 60) + 0x100000000 / 60 * 10) - os.time() > 5 then
 					if not (active_buffs:contains(buff)) then
-						if doom_buffs:contains(buff) or echo_buffs:contains(buff) then
+						if doom_buffs:contains(buff) then
 							windower.add_to_chat(1, string.format("%s", ("[AutoItem] Debuff detected: %s - [%s]"):format(res.buffs[buff].en, buff):color(39)))
-						elseif panacea and active and panacea_buffs:contains(buff) then
+						elseif active and (panacea and panacea_buffs:contains(buff)) or (dot and dot_buffs:contains(buff)) then
 							windower.add_to_chat(1, string.format("%s", ("[AutoItem] Debuff detected: %s - [%s]"):format(res.buffs[buff].en, buff):color(39)))
 						elseif active and (remedy_buffs:contains(buff) or holywater_buffs:contains(buff)) then
 							windower.add_to_chat(1, string.format("%s", ("[AutoItem] Debuff detected: %s - [%s]"):format(res.buffs[buff].en, buff):color(39)))
