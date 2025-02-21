@@ -18,10 +18,11 @@ dot = false
 job_registry = T{}
 panacea_buffs = S{12,13,136,144,145,146,147,149,167}	-- Weight, Slow, STR Down, Max HP Down, Max MP Down, Attack Down, Accuracy Down, Defense Down, Magic Def. Down
 dot_buffs = S{128,129,130,131,132,133} -- Burn, Frost, Choke, Rasp, Shock, Drown
-remedy_buffs = S{3,4,8}	-- Poison, Paralysis, Disease
+remedy_buffs = S{4,8}	-- Paralysis, Disease
+antidote_buffs = S{3} -- Poison
 holywater_buffs = S{9}	-- Curse
 doom_buffs = S{15}
-allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs):union(dot_buffs):union(doom_buffs)
+allbuffs = remedy_buffs:union(panacea_buffs):union(holywater_buffs):union(dot_buffs):union(doom_buffs):union(antidote_buffs)
 active_buffs = S{}
 
 local __bags = {}
@@ -50,7 +51,7 @@ function use_meds_check()
 				active_buffs:remove(buff_id)
 				attempt = os.clock()
 			end
-		elseif active and remedy_buffs:contains(buff_id) and (os.clock()-attempt) > 4 then
+		elseif active and remedy_buffs:contains(buff_id) and (os.clock()-attempt) > 2.5 then
 			if haveBuff(buff_id) and haveMeds(4155) then
 				windower.add_to_chat(6,"[AutoItem] Using Remedy.")
 				windower.send_command('input /item "Remedy" <me>')
@@ -59,7 +60,16 @@ function use_meds_check()
 				active_buffs:remove(buff_id)
 				attempt = os.clock()
 			end
-		elseif active and ((panacea and panacea_buffs:contains(buff_id)) or (dot and dot_buffs:contains(buff_id))) and (os.clock()-attempt) > 4 then
+		elseif active and antidote_buffs:contains(buff_id) and (os.clock()-attempt) > 2.5 then
+			if haveBuff(buff_id) and haveMeds(4148) then
+				windower.add_to_chat(6,"[AutoItem] Using Antidote.")
+				windower.send_command('input /item "Antidote" <me>')
+				attempt = os.clock()
+			else
+				active_buffs:remove(buff_id)
+				attempt = os.clock()
+			end
+		elseif active and ((panacea and panacea_buffs:contains(buff_id)) or (dot and dot_buffs:contains(buff_id))) and (os.clock()-attempt) > 3.5 then
 			if haveBuff(buff_id) and haveMeds(4149) then
 				windower.add_to_chat(6,"[AutoItem] Using Panacea.")
 				windower.send_command('input /item "Panacea" <me>')
@@ -68,7 +78,7 @@ function use_meds_check()
 				active_buffs:remove(buff_id)
 				attempt = os.clock()
 			end
-		elseif active and holywater_buffs:contains(buff_id) and player.main_job ~= 'WHM' and (os.clock()-attempt) > 4 then
+		elseif active and holywater_buffs:contains(buff_id) and player.main_job ~= 'WHM' and (os.clock()-attempt) > 3.5 then
             if haveBuff(buff_id) and haveMeds(4154) then
 				windower.add_to_chat(6,"[AutoItem] Using Holy Water.")
 				windower.send_command('input /item "Holy Water" <me>')
@@ -151,7 +161,7 @@ function handle_incoming_chunk(id, data)
 							windower.add_to_chat(1, string.format("%s", ("[AutoItem] Debuff detected: %s - [%s]"):format(res.buffs[buff].en, buff):color(39)))
 						elseif active and (panacea and panacea_buffs:contains(buff)) or (dot and dot_buffs:contains(buff)) then
 							windower.add_to_chat(1, string.format("%s", ("[AutoItem] Debuff detected: %s - [%s]"):format(res.buffs[buff].en, buff):color(39)))
-						elseif active and (remedy_buffs:contains(buff) or holywater_buffs:contains(buff)) then
+						elseif active and (remedy_buffs:contains(buff) or holywater_buffs:contains(buff) or antidote_buffs:contains(buff)) then
 							windower.add_to_chat(1, string.format("%s", ("[AutoItem] Debuff detected: %s - [%s]"):format(res.buffs[buff].en, buff):color(39)))
 						end
 						active_buffs:add(buff)
